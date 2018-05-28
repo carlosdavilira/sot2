@@ -15,7 +15,10 @@ public class Sot2 {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        // TODO code application logic here
+       TelaPrincipal novo = new TelaPrincipal();
+       novo.ChamarTelaPrincipal();
+       System.out.println("Iniciado.");
+
     }
     
 }
