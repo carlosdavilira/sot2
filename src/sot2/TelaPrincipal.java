@@ -22,11 +22,14 @@ public class TelaPrincipal extends javax.swing.JFrame {
         this.setVisible(true);
        
     }
+    
+    public void DesenharQuadrado(){
+    this.getGraphics().drawRect(100, 300, 50, 50);
+    
+    };
    
     
-    public void paint(Graphics g){
-       // g.drawLine(100, 100, 500, 500);
-    }
+    
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -59,6 +62,8 @@ public class TelaPrincipal extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setPreferredSize(new java.awt.Dimension(1366, 768));
         setResizable(false);
+
+        jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel1.setText("Recurso");
@@ -115,6 +120,8 @@ public class TelaPrincipal extends javax.swing.JFrame {
                         .addComponent(btnCriarRecurso)
                         .addGap(29, 29, 29))))
         );
+
+        jPanel2.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel2.setText("Processo");
@@ -187,6 +194,11 @@ public class TelaPrincipal extends javax.swing.JFrame {
 
         btnIniciar.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         btnIniciar.setText("Iniciar");
+        btnIniciar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnIniciarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -198,13 +210,13 @@ public class TelaPrincipal extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(35, 35, 35)
-                .addComponent(btnIniciar, javax.swing.GroupLayout.DEFAULT_SIZE, 125, Short.MAX_VALUE)
+                .addComponent(btnIniciar, javax.swing.GroupLayout.DEFAULT_SIZE, 117, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(252, Short.MAX_VALUE)
+                .addContainerGap(221, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -224,6 +236,11 @@ public class TelaPrincipal extends javax.swing.JFrame {
     private void btnCriarRecursoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCriarRecursoActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btnCriarRecursoActionPerformed
+
+    private void btnIniciarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIniciarActionPerformed
+        // TODO add your handling code here:
+       
+    }//GEN-LAST:event_btnIniciarActionPerformed
 
    
     public static void main(String args[]) {
