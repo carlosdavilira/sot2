@@ -9,7 +9,7 @@ package sot2;
  *
  * @author Carlos David
  */
-public class Processo {
+public class Processo implements Runnable{
     private Integer x;
     private Integer y;
     private Integer id;
@@ -58,6 +58,11 @@ public class Processo {
 
     public void setDeltaTu(Integer deltaTu) {
         this.deltaTu = deltaTu;
+    }
+
+    @Override
+    public void run() {
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
     
