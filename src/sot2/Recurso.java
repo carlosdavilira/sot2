@@ -5,6 +5,8 @@
  */
 package sot2;
 
+import java.util.concurrent.Semaphore;
+
 /**
  *
  * @author Carlos David
@@ -13,6 +15,11 @@ public class Recurso {
 
 private String nomeRecurso;
 private Integer id;
+private Semaphore semaforo;
+
+public Recurso(){
+    semaforo = new Semaphore(1);
+}
 
     public Integer getId() {
         return id;
