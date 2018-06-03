@@ -6,6 +6,10 @@
 package sot2;
 
 import java.awt.Graphics;
+import java.awt.List;
+import java.util.ArrayList;
+import javax.swing.JOptionPane;
+
 
 /**
  *
@@ -13,10 +17,13 @@ import java.awt.Graphics;
  */
 public class TelaPrincipal extends javax.swing.JFrame {
 
+    ArrayList<Processo> listProcessos;
+    ArrayList<Recurso> listRecursos;
    
     public TelaPrincipal() {
         initComponents();
-        
+        listProcessos = new ArrayList<Processo>();
+        listRecursos = new ArrayList<Recurso>();
      }
     public void ChamarTelaPrincipal(){
         this.setVisible(true);
@@ -149,6 +156,11 @@ public class TelaPrincipal extends javax.swing.JFrame {
         });
 
         btnDeletarProcesso.setText("Deletar");
+        btnDeletarProcesso.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDeletarProcessoActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -277,11 +289,33 @@ public class TelaPrincipal extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnCriarProcessoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCriarProcessoActionPerformed
-        // TODO add your handling code here:
+         if(listProcessos.size() < 10){
+            Processo novo = new Processo();
+            novo.setId(Integer.parseInt(nomeProcesso.getText()));
+            novo.setDeltaTs(Integer.parseInt(deltaTS.getText()));
+            novo.setDeltaTu(Integer.parseInt(deltaTu.getText()));
+            listProcessos.add(novo);
+            JOptionPane.showMessageDialog(null, "Processo criado com sucesso!");
+            LimparCampos();
+
+        }
+        else
+            JOptionPane.showMessageDialog(null, "Não é possível criar mais processos, pois a quantidade máxima é 10.");
+
     }//GEN-LAST:event_btnCriarProcessoActionPerformed
 
     private void btnCriarRecursoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCriarRecursoActionPerformed
-        // TODO add your handling code here:
+        if(listRecursos.size() < 10){
+            Recurso novo = new Recurso();
+            novo.setId(Integer.parseInt(idRecurso.getText()));
+            novo.setNomeRecurso(idRecurso.getText());
+            listRecursos.add(novo);
+            JOptionPane.showMessageDialog(null, "Recurso Criado com sucesso!");
+            LimparCampos();
+
+        }
+        else
+            JOptionPane.showMessageDialog(null, "Não é possível criar mais recursos, pois a quantidade máxima é 10.");
     }//GEN-LAST:event_btnCriarRecursoActionPerformed
 
     private void btnIniciarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIniciarActionPerformed
@@ -291,6 +325,33 @@ public class TelaPrincipal extends javax.swing.JFrame {
         DesenharReta(300,400);
     }//GEN-LAST:event_btnIniciarActionPerformed
 
+    private void btnDeletarProcessoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeletarProcessoActionPerformed
+       Integer indice = null;
+        for(int i = 0; i < listProcessos.size();i++){
+            if(listProcessos.get(i).getId().equals(Integer.parseInt(nomeProcesso.getText())))
+                indice = i;
+        }
+        int dialogResult = JOptionPane.showConfirmDialog (null, "Confirma a exclusão do Processo;"+nomeProcesso.getText()+" ?","Warning",JOptionPane.YES_NO_OPTION);
+        if(dialogResult == JOptionPane.YES_OPTION){
+          listProcessos.remove(indice);
+          JOptionPane.showMessageDialog(null, "Processo excluído!");
+
+        }else
+            JOptionPane.showMessageDialog(null, "Operação cancelada!");
+        
+    }//GEN-LAST:event_btnDeletarProcessoActionPerformed
+    public void LimparCampos(){
+        //Recursos
+        nomeRecurso.setText("");
+        idRecurso.setText("");
+        //Processos
+        nomeProcesso.setText("");
+        deltaTS.setText("");
+        deltaTu.setText("");
+        //SO
+        deltaTu.setText("");
+        
+    }
    
     public static void main(String args[]) {
        
