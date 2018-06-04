@@ -22,7 +22,10 @@ public class TelaPrincipal extends javax.swing.JFrame {
     private int posicaoInicialY = 100;
     private int posicaoInicialXQuadrado = 330;
     private int posicaoInicialYQuadrado = 350;
-    private int[] cores =  {50,50,50}; //RED GREEN BLUE
+    private int[] cores =  {224,7,46}; //RED GREEN BLUE
+    private final  ArrayList<Cores> listaCores = new Cores().getPalletacores();
+    private int indiceCor = 0;
+    
     
     public TelaPrincipal() {
         initComponents();
@@ -46,10 +49,10 @@ public class TelaPrincipal extends javax.swing.JFrame {
         this.getGraphics().fillRect(x, y, 30, 30);    
     };    
      public void DesenharCirculo(int x, int y, int cor[]){
-         Graphics g = this.getGraphics();
+        Graphics g = this.getGraphics();
         g.getColor();
+        g.setColor(new Color(cor[0],cor[1],cor[2]));        
         
-        g.setColor(new Color(cor[0], cor[1], cor[2])); 
         //g.setColor(Color.yellow); 
         g.fillOval(x, y, 30, 30);    
     };
@@ -375,14 +378,18 @@ public class TelaPrincipal extends javax.swing.JFrame {
             this.posicaoInicialX = this.posicaoInicialX +70;
             novo.setX(this.posicaoInicialX);
             novo.setY(this.posicaoInicialY);
-            cores[0] = cores[0]+10;
-            cores[1] = cores[1]+20;
-            cores[2] = cores[2]+15;
-            novo.setCor(cores);
+            //cores[0] = cores[0]+1;
+            //cores[1] = cores[1]+20;
+            //cores[2] = cores[2]+15;
+            //novo.setCor(cores);
+            if(indiceCor == 10)
+                indiceCor = 0;            
+            novo.setCor((listaCores.get(indiceCor).red),(listaCores.get(indiceCor).green),(listaCores.get(indiceCor).blue));
             listProcessos.add(novo);
             areaTextoLog.setText(areaTextoLog.getText()+"\n"+"Processo: "+novo.getId()+" - Δtu: "+novo.getDeltaTu()+" - Δts: "+novo.getDeltaTs()+" criado.");
             CarregarAreaTextoProcessosRecursos();
             
+            indiceCor = indiceCor+1;
             //Desenhar            
             DesenharCirculo(novo.getX(), novo.getY(),novo.getCor());
             LimparCampos();

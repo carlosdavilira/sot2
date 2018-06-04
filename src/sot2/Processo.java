@@ -15,7 +15,7 @@ public class Processo implements Runnable{
     private Integer id;
     private Integer deltaTs;
     private Integer deltaTu;
-    private int[] cor;
+    private int[] cor = new int[3];
     
     
     
@@ -65,8 +65,10 @@ public class Processo implements Runnable{
         return cor;
     }
 
-    public void setCor(int[] cor) {
-        this.cor = cor;
+    public void setCor(int red,int green, int blue) {
+        this.cor[0] = red;
+        this.cor[1] = green;
+        this.cor[2] = blue;
     }
 
    
