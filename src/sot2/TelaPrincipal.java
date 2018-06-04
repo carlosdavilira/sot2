@@ -17,7 +17,11 @@ public class TelaPrincipal extends javax.swing.JFrame {
 
     ArrayList<Processo> listProcessos;
     ArrayList<Recurso> listRecursos;
-   
+    private int posicaoInicialX = 330;
+    private int posicaoInicialY = 100;
+    private int posicaoInicialXQuadrado = 330;
+    private int posicaoInicialYQuadrado = 350;
+    
     public TelaPrincipal() {
         initComponents();
         listProcessos = new ArrayList<Processo>();
@@ -77,6 +81,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
         jLabel11 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         areaTextoProcessos = new javax.swing.JTextArea();
+        jButton2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setPreferredSize(new java.awt.Dimension(1360, 768));
@@ -286,6 +291,13 @@ public class TelaPrincipal extends javax.swing.JFrame {
         areaTextoProcessos.setRows(5);
         jScrollPane2.setViewportView(areaTextoProcessos);
 
+        jButton2.setText("Desenhar");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -294,19 +306,25 @@ public class TelaPrincipal extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(35, 35, 35)
-                        .addComponent(btnIniciar, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jLabel10)
-                    .addComponent(jLabel11)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 229, Short.MAX_VALUE)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING)))
-                .addContainerGap(445, Short.MAX_VALUE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(35, 35, 35)
+                                .addComponent(btnIniciar, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jLabel10)
+                            .addComponent(jLabel11))
+                        .addContainerGap(445, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 229, Short.MAX_VALUE)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButton2)
+                        .addGap(474, 474, 474))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -318,7 +336,11 @@ public class TelaPrincipal extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel11)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 280, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 280, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jButton2)))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -341,8 +363,10 @@ public class TelaPrincipal extends javax.swing.JFrame {
             novo.setDeltaTu(Integer.parseInt(deltaTu.getText()));
             listProcessos.add(novo);
             areaTextoLog.setText(areaTextoLog.getText()+"\n"+"Processo: "+novo.getId()+" - Δtu: "+novo.getDeltaTu()+" - Δts: "+novo.getDeltaTs()+" criado.");
-            //JOptionPane.showMessageDialog(null, "Processo criado com sucesso!");
             CarregarAreaTextoProcessosRecursos();
+            //Desenhar
+            this.posicaoInicialX = this.posicaoInicialX +70;
+             DesenharCirculo(this.posicaoInicialX, this.posicaoInicialY);
             LimparCampos();
 
         }
@@ -360,6 +384,9 @@ public class TelaPrincipal extends javax.swing.JFrame {
             areaTextoLog.setText(areaTextoLog.getText()+"\n"+"Recurso: "+novo.getNomeRecurso() + " ID:"+novo.getId()+ " criado.");
             //JOptionPane.showMessageDialog(null, "Recurso Criado com sucesso!");
             CarregarAreaTextoProcessosRecursos();
+            //Desenhar
+            this.posicaoInicialXQuadrado = this.posicaoInicialXQuadrado +70;
+             DesenharQuadrado(this.posicaoInicialXQuadrado, this.posicaoInicialYQuadrado);
             LimparCampos();
 
         }
@@ -407,6 +434,32 @@ public class TelaPrincipal extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+       this.DesenharCirculo(400, 100);
+       this.DesenharCirculo(470, 100);
+       this.DesenharCirculo(540, 100);
+       this.DesenharCirculo(610, 100);
+       this.DesenharCirculo(680, 100);
+       this.DesenharCirculo(750, 100);
+       this.DesenharCirculo(820, 100);
+       this.DesenharCirculo(890, 100);
+       this.DesenharCirculo(960, 100);
+       this.DesenharCirculo(1030, 100);
+       
+       
+       
+      this.DesenharQuadrado(400, 300);
+       this.DesenharQuadrado(470, 300);
+       this.DesenharQuadrado(540, 300);
+       this.DesenharQuadrado(610, 300);
+       this.DesenharQuadrado(680, 300);
+       this.DesenharQuadrado(750, 300);
+       this.DesenharQuadrado(820, 300);
+       this.DesenharQuadrado(890, 300);
+       this.DesenharQuadrado(960, 300);
+       this.DesenharQuadrado(1030, 300);
+    }//GEN-LAST:event_jButton2ActionPerformed
     public void LimparCampos(){
         //Recursos
         nomeRecurso.setText("");
@@ -441,6 +494,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
     private javax.swing.JTextField deltaTu;
     private javax.swing.JTextField idRecurso;
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;

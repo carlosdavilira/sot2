@@ -36,6 +36,13 @@ public Recurso(){
     public void setNomeRecurso(String nomeRecurso) {
         this.nomeRecurso = nomeRecurso;
     }
+    
+    public void UsarRecurso() throws InterruptedException{
+        this.semaforo.acquire();
+    }
+    public void LiberarRecurso(){
+        this.semaforo.release();
+    }
 
 
 
