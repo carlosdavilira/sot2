@@ -1,6 +1,7 @@
 
 package sot2;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.List;
@@ -21,6 +22,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
     private int posicaoInicialY = 100;
     private int posicaoInicialXQuadrado = 330;
     private int posicaoInicialYQuadrado = 350;
+    private int[] cores =  {50,50,50}; //RED GREEN BLUE
     
     public TelaPrincipal() {
         initComponents();
@@ -37,10 +39,19 @@ public class TelaPrincipal extends javax.swing.JFrame {
     }
     
     public void DesenharQuadrado(int x, int y){
-    this.getGraphics().drawRect(x, y, 30, 30);    
+        this.getGraphics().drawRect(x, y, 30, 30);    
     };
-    public void DesenharCirculo(int x, int y){
-    this.getGraphics().drawOval(x, y, 30, 30);    
+    public void DesenharQuadrado(int x, int y, int[] cor){
+        this.getGraphics().setColor(new Color(cor[0], cor[1], cor[2]));
+        this.getGraphics().fillRect(x, y, 30, 30);    
+    };    
+     public void DesenharCirculo(int x, int y, int cor[]){
+         Graphics g = this.getGraphics();
+        g.getColor();
+        
+        g.setColor(new Color(cor[0], cor[1], cor[2])); 
+        //g.setColor(Color.yellow); 
+        g.fillOval(x, y, 30, 30);    
     };
     public void DesenharReta(int xInicial, int yInicial,int xFinal,int yFinal){
      this.getGraphics().drawLine(xInicial, yInicial, xFinal, yFinal);
@@ -364,11 +375,16 @@ public class TelaPrincipal extends javax.swing.JFrame {
             this.posicaoInicialX = this.posicaoInicialX +70;
             novo.setX(this.posicaoInicialX);
             novo.setY(this.posicaoInicialY);
+            cores[0] = cores[0]+10;
+            cores[1] = cores[1]+20;
+            cores[2] = cores[2]+15;
+            novo.setCor(cores);
             listProcessos.add(novo);
             areaTextoLog.setText(areaTextoLog.getText()+"\n"+"Processo: "+novo.getId()+" - Δtu: "+novo.getDeltaTu()+" - Δts: "+novo.getDeltaTs()+" criado.");
             CarregarAreaTextoProcessosRecursos();
+            
             //Desenhar            
-            DesenharCirculo(novo.getX(), novo.getY());
+            DesenharCirculo(novo.getX(), novo.getY(),novo.getCor());
             LimparCampos();
 
         }
@@ -440,7 +456,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-       this.DesenharCirculo(400, 100);
+       /*this.DesenharCirculo(400, 100);
        this.DesenharCirculo(470, 100);
        this.DesenharCirculo(540, 100);
        this.DesenharCirculo(610, 100);
@@ -449,7 +465,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
        this.DesenharCirculo(820, 100);
        this.DesenharCirculo(890, 100);
        this.DesenharCirculo(960, 100);
-       this.DesenharCirculo(1030, 100);
+       this.DesenharCirculo(1030, 100); */
        
        
        
@@ -464,7 +480,10 @@ public class TelaPrincipal extends javax.swing.JFrame {
        this.DesenharQuadrado(960, 300);
        this.DesenharQuadrado(1030, 300);
        
-       this.DesenharReta(415, 100,415,300);
+       this.DesenharReta(415, 115,415,300);
+       this.DesenharReta(415, 115,485,300);
+       this.DesenharReta(415, 115,1045,300);
+       this.DesenharReta(1045, 115,415,300);
     }//GEN-LAST:event_jButton2ActionPerformed
     public void LimparCampos(){
         //Recursos

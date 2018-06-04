@@ -15,6 +15,7 @@ public class Processo implements Runnable{
     private Integer id;
     private Integer deltaTs;
     private Integer deltaTu;
+    private int[] cor;
     
     
     
@@ -60,6 +61,18 @@ public class Processo implements Runnable{
         this.deltaTu = deltaTu;
     }
 
+    public int[] getCor() {
+        return cor;
+    }
+
+    public void setCor(int[] cor) {
+        this.cor = cor;
+    }
+
+   
+    
+    
+    
     @Override
     public void run() {
         //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
