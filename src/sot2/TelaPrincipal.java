@@ -42,8 +42,8 @@ public class TelaPrincipal extends javax.swing.JFrame {
     public void DesenharCirculo(int x, int y){
     this.getGraphics().drawOval(x, y, 30, 30);    
     };
-    public void DesenharReta(int x, int y ){
-     this.getGraphics().drawLine(x, y, 0, 100);
+    public void DesenharReta(int xInicial, int yInicial,int xFinal,int yFinal){
+     this.getGraphics().drawLine(xInicial, yInicial, xFinal, yFinal);
     }
    
     
@@ -361,12 +361,14 @@ public class TelaPrincipal extends javax.swing.JFrame {
             novo.setId(Integer.parseInt(nomeProcesso.getText()));
             novo.setDeltaTs(Integer.parseInt(deltaTS.getText()));
             novo.setDeltaTu(Integer.parseInt(deltaTu.getText()));
+            this.posicaoInicialX = this.posicaoInicialX +70;
+            novo.setX(this.posicaoInicialX);
+            novo.setY(this.posicaoInicialY);
             listProcessos.add(novo);
             areaTextoLog.setText(areaTextoLog.getText()+"\n"+"Processo: "+novo.getId()+" - Δtu: "+novo.getDeltaTu()+" - Δts: "+novo.getDeltaTs()+" criado.");
             CarregarAreaTextoProcessosRecursos();
-            //Desenhar
-            this.posicaoInicialX = this.posicaoInicialX +70;
-             DesenharCirculo(this.posicaoInicialX, this.posicaoInicialY);
+            //Desenhar            
+            DesenharCirculo(novo.getX(), novo.getY());
             LimparCampos();
 
         }
@@ -380,13 +382,15 @@ public class TelaPrincipal extends javax.swing.JFrame {
             Recurso novo = new Recurso();
             novo.setId(Integer.parseInt(idRecurso.getText()));
             novo.setNomeRecurso(nomeRecurso.getText());
+            this.posicaoInicialXQuadrado = this.posicaoInicialXQuadrado +70;
+            novo.setX(this.posicaoInicialXQuadrado);
+            novo.setY(this.posicaoInicialYQuadrado);
             listRecursos.add(novo);
             areaTextoLog.setText(areaTextoLog.getText()+"\n"+"Recurso: "+novo.getNomeRecurso() + " ID:"+novo.getId()+ " criado.");
             //JOptionPane.showMessageDialog(null, "Recurso Criado com sucesso!");
             CarregarAreaTextoProcessosRecursos();
             //Desenhar
-            this.posicaoInicialXQuadrado = this.posicaoInicialXQuadrado +70;
-             DesenharQuadrado(this.posicaoInicialXQuadrado, this.posicaoInicialYQuadrado);
+            DesenharQuadrado(novo.getX(), novo.getY());
             LimparCampos();
 
         }
@@ -398,7 +402,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
         // TODO add your handling code here:
         //DesenharQuadrado(100,200);
        // DesenharCirculo(100,200);
-        DesenharReta(300,400);
+       
         
     }//GEN-LAST:event_btnIniciarActionPerformed
     public void CarregarAreaTextoProcessosRecursos(){
@@ -459,6 +463,8 @@ public class TelaPrincipal extends javax.swing.JFrame {
        this.DesenharQuadrado(890, 300);
        this.DesenharQuadrado(960, 300);
        this.DesenharQuadrado(1030, 300);
+       
+       this.DesenharReta(415, 100,415,300);
     }//GEN-LAST:event_jButton2ActionPerformed
     public void LimparCampos(){
         //Recursos

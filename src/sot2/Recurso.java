@@ -16,6 +16,8 @@ public class Recurso {
 private String nomeRecurso;
 private Integer id;
 private Semaphore semaforo;
+private Integer x;
+private Integer y;
 
 public Recurso(){
     semaforo = new Semaphore(1);
@@ -43,6 +45,23 @@ public Recurso(){
     public void LiberarRecurso(){
         this.semaforo.release();
     }
+
+    public Integer getX() {
+        return x;
+    }
+
+    public Integer getY() {
+        return y;
+    }
+
+    public void setX(Integer x) {
+        this.x = x;
+    }
+
+    public void setY(Integer y) {
+        this.y = y;
+    }
+    
 
 
 
