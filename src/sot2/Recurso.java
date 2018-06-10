@@ -5,6 +5,7 @@
  */
 package sot2;
 
+import java.util.ArrayList;
 import java.util.concurrent.Semaphore;
 
 /**
@@ -18,7 +19,8 @@ private Integer id;
 private Semaphore semaforo;
 private Integer x;
 private Integer y;
-private Integer cor; 
+private int cor[] = new int[3]; 
+private ArrayList<Processo> listaBloqueados = new ArrayList<>();
 
 public Recurso(){
     semaforo = new Semaphore(1);
@@ -63,13 +65,28 @@ public Recurso(){
         this.y = y;
     }
 
-    public Integer getCor() {
-        return cor;
+    public int[] getCor() {
+        return this.cor;
     }
 
-    public void setCor(Integer cor) {
+    public void setCor(int[] cor) {
         this.cor = cor;
     }
+
+    public Semaphore getSemaforo() {
+        return semaforo;
+    }
+
+    public ArrayList<Processo> getListaBloqueados() {
+        return listaBloqueados;
+    }
+
+    public void setListaBloqueados(ArrayList<Processo> listaBloqueados) {
+        this.listaBloqueados = listaBloqueados;
+    }
+    
+    
+    
     
 
 

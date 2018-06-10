@@ -56,7 +56,13 @@ public class TelaPrincipal extends javax.swing.JFrame {
         //g.setColor(Color.yellow); 
         g.fillOval(x, y, 30, 30);    
     };
-    public void DesenharReta(int xInicial, int yInicial,int xFinal,int yFinal){
+    public void DesenharReta(int xInicial, int yInicial,int xFinal,int yFinal,int[] cor){
+     Graphics g = this.getGraphics();
+     g.getColor(); 
+     if(cor == null)
+        g.setColor(this.getBackground()); // se nao tiver cor pega o do fundo da tela
+     else
+        g.setColor(new Color(cor[0],cor[1],cor[2]));     
      this.getGraphics().drawLine(xInicial, yInicial, xFinal, yFinal);
     }
    
@@ -333,9 +339,9 @@ public class TelaPrincipal extends javax.swing.JFrame {
                             .addComponent(jLabel11))
                         .addContainerGap(445, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 229, Short.MAX_VALUE)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 240, Short.MAX_VALUE)
+                            .addComponent(jScrollPane2))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jButton2)
                         .addGap(474, 474, 474))))
@@ -370,9 +376,15 @@ public class TelaPrincipal extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnCriarProcessoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCriarProcessoActionPerformed
-         if(listProcessos.size() < 10){
-            Processo novo = new Processo();
-            novo.setId(Integer.parseInt(nomeProcesso.getText()));
+       if(listRecursos.size() == 0){
+          JOptionPane.showMessageDialog(null, "Você só pode criar processos se houverem recursos disponíveis.");
+       }  
+       else if(listProcessos.size() == 10){
+           JOptionPane.showMessageDialog(null, "Não é possível criar mais processos, pois a quantidade máxima é 10.");
+       }
+       else{           
+         Processo novo = new Processo(this.listRecursos,areaTextoLog,this);
+            novo.setIdProcesso(Integer.parseInt(nomeProcesso.getText()));
             novo.setDeltaTs(Integer.parseInt(deltaTS.getText()));
             novo.setDeltaTu(Integer.parseInt(deltaTu.getText()));
             this.posicaoInicialX = this.posicaoInicialX +70;
@@ -386,20 +398,15 @@ public class TelaPrincipal extends javax.swing.JFrame {
                 indiceCor = 0;            
             novo.setCor((listaCores.get(indiceCor).red),(listaCores.get(indiceCor).green),(listaCores.get(indiceCor).blue));
             listProcessos.add(novo);
-            areaTextoLog.setText(areaTextoLog.getText()+"\n"+"Processo: "+novo.getId()+" - Δtu: "+novo.getDeltaTu()+" - Δts: "+novo.getDeltaTs()+" criado.");
+            areaTextoLog.setText(areaTextoLog.getText()+"\n"+"Processo: "+novo.getIdProcesso()+" - Δtu: "+novo.getDeltaTu()+" - Δts: "+novo.getDeltaTs()+" criado.");
             CarregarAreaTextoProcessosRecursos();
             
             indiceCor = indiceCor+1;
             //Desenhar            
             DesenharCirculo(novo.getX(), novo.getY(),novo.getCor());
             LimparCampos();
-
-        }
-        else
-            JOptionPane.showMessageDialog(null, "Não é possível criar mais processos, pois a quantidade máxima é 10.");
-
     }//GEN-LAST:event_btnCriarProcessoActionPerformed
-
+    }
     private void btnCriarRecursoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCriarRecursoActionPerformed
         if(listRecursos.size() < 10){
             Recurso novo = new Recurso();
@@ -425,7 +432,12 @@ public class TelaPrincipal extends javax.swing.JFrame {
         // TODO add your handling code here:
         //DesenharQuadrado(100,200);
        // DesenharCirculo(100,200);
-       
+       if(listProcessos.size() > 0 && listRecursos.size() > 0)
+            for(Processo processo : listProcessos){
+                processo.start();
+            }
+       else
+           JOptionPane.showMessageDialog(null, "Não existem processos e recursos disponíveis para iniciar a simulação!");
         
     }//GEN-LAST:event_btnIniciarActionPerformed
     public void CarregarAreaTextoProcessosRecursos(){
@@ -434,17 +446,18 @@ public class TelaPrincipal extends javax.swing.JFrame {
             areaTextoProcessos.setText(areaTextoProcessos.getText() + "\n" + "Recurso: "+recurso.getNomeRecurso()+" ID:" + recurso.getId());
         }
         for(Processo processo : listProcessos){
-            areaTextoProcessos.setText(areaTextoProcessos.getText() + "\n" + "Processo: "+processo.getId()+" - Δtu:"+ processo.getDeltaTu()+" - Δtu:"+processo.getDeltaTs());
+            areaTextoProcessos.setText(areaTextoProcessos.getText() + "\n" + "Processo: "+processo.getIdProcesso()+" - Δtu:"+ processo.getDeltaTu()+" - Δtu:"+processo.getDeltaTs());
         }
     }
     private void btnDeletarProcessoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeletarProcessoActionPerformed
        Integer indice = null;
         for(int i = 0; i < listProcessos.size();i++){
-            if(listProcessos.get(i).getId().equals(Integer.parseInt(nomeProcesso.getText())))
+            if(listProcessos.get(i).getIdProcesso().equals(Integer.parseInt(nomeProcesso.getText())))
                 indice = i;
         }
         int dialogResult = JOptionPane.showConfirmDialog (null, "Confirma a exclusão do Processo;"+nomeProcesso.getText()+" ?","Warning",JOptionPane.YES_NO_OPTION);
         if(dialogResult == JOptionPane.YES_OPTION){
+          listProcessos.get(indice.intValue()).setVivo(false); //Condição para parada de thread
           listProcessos.remove(indice.intValue());
           JOptionPane.showMessageDialog(null, "Processo excluído!");
           CarregarAreaTextoProcessosRecursos();
@@ -476,7 +489,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
        
        
        
-      this.DesenharQuadrado(400, 300);
+    /*  this.DesenharQuadrado(400, 300);
        this.DesenharQuadrado(470, 300);
        this.DesenharQuadrado(540, 300);
        this.DesenharQuadrado(610, 300);
@@ -490,7 +503,11 @@ public class TelaPrincipal extends javax.swing.JFrame {
        this.DesenharReta(415, 115,415,300);
        this.DesenharReta(415, 115,485,300);
        this.DesenharReta(415, 115,1045,300);
-       this.DesenharReta(1045, 115,415,300);
+       this.DesenharReta(1045, 115,415,300); */
+    
+    for(Processo p : listProcessos){
+        DesenharCirculo(p.getX(), p.getY(), p.getCor());
+    }
     }//GEN-LAST:event_jButton2ActionPerformed
     public void LimparCampos(){
         //Recursos
