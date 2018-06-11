@@ -344,7 +344,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
         areaDeadLock.setRows(5);
         jScrollPane3.setViewportView(areaDeadLock);
 
-        jLabel12.setText("Deadlocks");
+        jLabel12.setText("Deadlocks e Bloqueios");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -501,18 +501,17 @@ public class TelaPrincipal extends javax.swing.JFrame {
         }
     }
     private void btnDeletarProcessoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeletarProcessoActionPerformed
-       Integer indice = null;
-        for(int i = 0; i < listProcessos.size();i++){
-            if(listProcessos.get(i).getIdProcesso().equals(Integer.parseInt(nomeProcesso.getText())))
-                indice = i;
-        }
+        Integer id = Integer.parseInt(nomeProcesso.getText());
+        
         int dialogResult = JOptionPane.showConfirmDialog (null, "Confirma a exclusão do Processo;"+nomeProcesso.getText()+" ?","Warning",JOptionPane.YES_NO_OPTION);
         if(dialogResult == JOptionPane.YES_OPTION){
-          listProcessos.get(indice.intValue()).setVivo(false); //Condição para parada de thread
-          listProcessos.remove(indice.intValue());
-            DesenharX(listProcessos.get(indice.intValue()));
-          JOptionPane.showMessageDialog(null, "Processo excluído!");
-          CarregarAreaTextoProcessosRecursos();
+         Processo p = BuscarProcesso(listProcessos, id);           
+         p.setVivo(false);
+         listProcessos.remove(p);            
+         int cor[] = {240,240,240};
+         DesenharCirculo(p.getX(), p.getY(), cor);
+         JOptionPane.showMessageDialog(null, "Processo excluído!");
+         CarregarAreaTextoProcessosRecursos();
 
         }else
             JOptionPane.showMessageDialog(null, "Operação cancelada!");
@@ -536,6 +535,15 @@ public class TelaPrincipal extends javax.swing.JFrame {
     int testeCor[] = {255,255,255};
     this.DesenharReta(this.getX()+15,this.getY()+30,listRecursos.get(0).getX()+15,listRecursos.get(0).getY(),testeCor);
     }//GEN-LAST:event_jButton2ActionPerformed
+    public Processo BuscarProcesso(ArrayList<Processo> lista, int id){
+    for(Processo p : lista){
+        if(p.getIdProcesso() == id)
+            return p;
+    }
+    return null;
+    }
+    
+    
     public void LimparCampos(){
         //Recursos
         nomeRecurso.setText("");

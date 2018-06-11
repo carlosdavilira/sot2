@@ -5,6 +5,7 @@
  */
 package sot2;
 
+import com.sun.xml.internal.ws.client.ContentNegotiation;
 import java.awt.Graphics;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -125,6 +126,7 @@ public class Processo extends Thread{ //implements Runnable{
             //areaTextoLog.setText(areaTextoLog.getText()+"\n"+"Processo: "+this.getIdProcesso()+" está Bloqueado!");
             this.estado = "Bloqueado";
             int cor[] = {0,0,0};
+            refTela.DesenharReta(this.getX()+15, this.getY()+30, r.getX()+15, r.getY(), cor);
             refTela.DesenharCirculo(this.getX(), this.getY(), cor);
                   
             
@@ -133,27 +135,33 @@ public class Processo extends Thread{ //implements Runnable{
            // }
         }
         //r.UsarRecurso();
-             if(this.getRecursosUsando().contains(r)){}
-        else{
-         r.getSemaforo().acquire();
-         r.setIdProcessoBloqueador(this.getIdProcesso()); //seta o processo bloqueador
-          this.estadoLiberado = "usando o recurso "+r.getNomeRecurso();
-        this.recursosUsando.add(r); //adicionando o recurso a lista de recursos que o processo está usando       
-        this.getRefTela().DesenharReta(this.getX()+15,this.getY()+30,r.getX()+15,r.getY(),this.getCor());        
+             //if(this.getRecursosUsando().contains(r)){}
+        if(BuscaRecurso(this.getRecursosUsando(), r) == false){       
+            r.getSemaforo().acquire();
+            r.setIdProcessoBloqueador(this.getIdProcesso()); //seta o processo bloqueador
+            this.estadoLiberado = "usando o recurso "+r.getNomeRecurso();
+            this.recursosUsando.add(r); //adicionando o recurso a lista de recursos que o processo está usando
+           getRefTela().DesenharQuadrado(r.getX(), r.getY(), this.getCor());
+           this.getRefTela().DesenharReta(this.getX()+15,this.getY()+30,r.getX()+15,r.getY(),this.getCor());        
         }
         //areaTextoLog.setText(areaTextoLog.getText()+"\n"+"Processo: "+this.getIdProcesso()+" está usando o Recurso: "+r.getId());
        // System.out.println("Processo: "+this.getIdProcesso()+" está usando o Recurso: "+r.getId());
     }
     public void LiberarRecurso(Recurso r ){
         if(r.getListaBloqueados() == null){}
-        else if(r.getListaBloqueados().size() > 0)    
-            r.getListaBloqueados().clear(); //apaga a lista de processos bloqueados, pois vai dar um release no semaforo
+        else if(r.getListaBloqueados().size() > 0){
+            for(Processo p : r.getListaBloqueados()){
+                refTela.DesenharCirculo(p.getX(), p.getY(), p.getCor());
+            }
+            r.getListaBloqueados().clear();
+        }    
+             //apaga a lista de processos bloqueados, pois vai dar um release no semaforo
         r.setIdProcessoBloqueador(0); //reseta o processo bloqueador
         this.estadoLiberado = "liberou o recurso"+r.getNomeRecurso();
-        r.LiberarRecurso(); //da o release no semaforo        
+         r.getSemaforo().release();//da o release no semaforo        
         this.recursosUsando.remove(r); //remover recurso da lista de usados do processo
-        int cor[] = {r.cor[0],r.cor[1],r.cor[2]};
-        refTela.DesenharCirculo(this.getX(), this.getY(), cor);
+        int cor[] = {240,240,240};
+        refTela.DesenharQuadrado(r.getX(), r.getY(), cor);
         
         if(this.recursosUsando.size() == 0)
             this.estado = "Rodando";
@@ -198,27 +206,32 @@ public class Processo extends Thread{ //implements Runnable{
             }
         return true;
     }
-    
+  public boolean BuscaRecurso(ArrayList<Recurso> lista, Recurso r){
+      for(Recurso re : lista){
+          if(re.getId() == r.getId())
+              return true;
+      }
+  return false;
+  }  
     @Override
     public void run() {
        
         while(this.vivo){
-            
-            
             Recurso recurso =  this.refListRecurso.get(SortearRecurso());
-            
             try {
                 //long tempoInicial = (System.currentTimeMillis());
                // while(System.currentTimeMillis()  > ((this.getDeltaTs()*1000) + tempoInicial)){
                ContaTempo(this.getDeltaTs());
                //Threaad.sleep(deltaTs * 1000);
-               if(this.getRecursosUsando().contains(recurso)){
+               //if(this.getRecursosUsando().contains(recurso)){
+               if(BuscaRecurso(this.getRecursosUsando(),recurso)){
                     //System.out.println("Processo "+this.getIdProcesso()+" usando o recurso "+recurso.getNomeRecurso());
                     //ContaTempo(this.getDeltaTu());
                    // System.out.println("Processo "+this.getIdProcesso()+" parou de usar o recurso "+recurso.getNomeRecurso());
                     this.LiberarRecurso(recurso);
                }
-               else if(!this.getRecursosUsando().contains(recurso)){
+               //else if(!this.getRecursosUsando().contains(recurso)){
+               else if(BuscaRecurso(this.getRecursosUsando(),recurso) == false){
                     this.UtilizarRecurso(recurso);  // utiliza recurso 
                      }                
                 

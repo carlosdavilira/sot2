@@ -49,7 +49,7 @@ public Recurso(){
         this.semaforo.acquire();
     }
     public void LiberarRecurso(){
-        this.semaforo.release();
+        this.semaforo.release();  
         
     }
 

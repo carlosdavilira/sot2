@@ -47,7 +47,7 @@ for(Recurso recurso : listRecursos){
 public void run(){
     while(true){
         try {
-            Thread.sleep(500);
+            Thread.sleep(200);
             MostrarLog();
         } catch (InterruptedException ex) {
             Logger.getLogger(Log.class.getName()).log(Level.SEVERE, null, ex);

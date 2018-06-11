@@ -481,7 +481,7 @@
     </Container>
     <Component class="javax.swing.JLabel" name="jLabel12">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Deadlocks"/>
+        <Property name="text" type="java.lang.String" value="Deadlocks e Bloqueios"/>
       </Properties>
     </Component>
   </SubComponents>
