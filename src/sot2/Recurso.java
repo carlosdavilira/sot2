@@ -5,6 +5,7 @@
  */
 package sot2;
 
+import java.awt.Button;
 import java.util.ArrayList;
 import java.util.concurrent.Semaphore;
 
@@ -21,6 +22,8 @@ private Integer x;
 private Integer y;
 private int cor[] = new int[3]; 
 private ArrayList<Processo> listaBloqueados = new ArrayList<>();
+private int idProcessoBloqueador;
+public Button botao;
 
 public Recurso(){
     semaforo = new Semaphore(1);
@@ -84,6 +87,14 @@ public Recurso(){
 
     public void setListaBloqueados(ArrayList<Processo> listaBloqueados) {
         this.listaBloqueados = listaBloqueados;
+    }
+
+    public int getIdProcessoBloqueador() {
+        return idProcessoBloqueador;
+    }
+
+    public void setIdProcessoBloqueador(int idProcessoBloqueador) {
+        this.idProcessoBloqueador = idProcessoBloqueador;
     }
     
     

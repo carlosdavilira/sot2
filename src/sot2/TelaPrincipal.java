@@ -1,6 +1,7 @@
 
 package sot2;
 
+import java.awt.Button;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -21,7 +22,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
     private int posicaoInicialX = 330;
     private int posicaoInicialY = 100;
     private int posicaoInicialXQuadrado = 330;
-    private int posicaoInicialYQuadrado = 350;
+    private int posicaoInicialYQuadrado = 330;
     private int[] cores =  {224,7,46}; //RED GREEN BLUE
     private final  ArrayList<Cores> listaCores = new Cores().getPalletacores();
     private int indiceCor = 0;
@@ -47,7 +48,19 @@ public class TelaPrincipal extends javax.swing.JFrame {
     public void DesenharQuadrado(int x, int y, int[] cor){
         this.getGraphics().setColor(new Color(cor[0], cor[1], cor[2]));
         this.getGraphics().fillRect(x, y, 30, 30);    
-    };    
+    };
+     public void DesenharQuadrado(int x, int y, int[] cor,String nomeR, Recurso r){
+        Button b  = new Button(nomeR);
+        b.setSize(30, 30);
+        b.setMaximumSize(new Dimension(30, 30));
+        b.setLocation(x, y);
+        if(cor != null){
+        b.setBackground(new Color(cor[0], cor[1], cor[2]));
+        } 
+         r.botao = b;
+        this.getContentPane().add(nomeR, b);
+        
+    }; 
      public void DesenharCirculo(int x, int y, int cor[]){
         Graphics g = this.getGraphics();
         g.getColor();
@@ -64,6 +77,10 @@ public class TelaPrincipal extends javax.swing.JFrame {
      else
         g.setColor(new Color(cor[0],cor[1],cor[2]));     
      this.getGraphics().drawLine(xInicial, yInicial, xFinal, yFinal);
+    }
+    public void DesenharX(Processo p){
+        this.getGraphics().drawLine(p.getX()-10, p.getY()-5, p.getX()+30, p.getY()+30);
+        this.getGraphics().drawLine(p.getX(), p.getY()+25, p.getX()+30, p.getY()-10);
     }
    
     
@@ -103,7 +120,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
         areaTextoProcessos = new javax.swing.JTextArea();
         jButton2 = new javax.swing.JButton();
         jScrollPane3 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
+        areaDeadLock = new javax.swing.JTextArea();
         jLabel12 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -321,10 +338,10 @@ public class TelaPrincipal extends javax.swing.JFrame {
             }
         });
 
-        jTextArea1.setEditable(false);
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jScrollPane3.setViewportView(jTextArea1);
+        areaDeadLock.setEditable(false);
+        areaDeadLock.setColumns(20);
+        areaDeadLock.setRows(5);
+        jScrollPane3.setViewportView(areaDeadLock);
 
         jLabel12.setText("Deadlocks");
 
@@ -355,13 +372,13 @@ public class TelaPrincipal extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(jButton2)
-                                .addGap(474, 474, 474))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel12)
                                     .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addContainerGap())))))
+                                .addContainerGap())
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(jButton2)
+                                .addGap(474, 474, 474))))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -403,6 +420,9 @@ public class TelaPrincipal extends javax.swing.JFrame {
        else if(listProcessos.size() == 10){
            JOptionPane.showMessageDialog(null, "Não é possível criar mais processos, pois a quantidade máxima é 10.");
        }
+       else if((Integer.parseInt(nomeProcesso.getText()) <= 0))
+           JOptionPane.showMessageDialog(null, "O ID do processo precisa ser MAIOR que zero");
+
        else{           
          Processo novo = new Processo(this.listRecursos,areaTextoLog,this);
             novo.setIdProcesso(Integer.parseInt(nomeProcesso.getText()));
@@ -442,6 +462,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
             CarregarAreaTextoProcessosRecursos();
             //Desenhar
             DesenharQuadrado(novo.getX(), novo.getY());
+           // DesenharQuadrado(novo.getX(), novo.getY(),null,novo.getId().toString(),novo);
             LimparCampos();
 
         }
@@ -452,15 +473,20 @@ public class TelaPrincipal extends javax.swing.JFrame {
     private void btnIniciarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIniciarActionPerformed
         // TODO add your handling code here:
         //DesenharQuadrado(100,200);
-       // DesenharCirculo(100,200);
+       // DesenharCirculo(100,200);.
+        int tempoSO = Integer.parseInt(deltaTSO.getText().toString());
        if(listProcessos.size() > 0 && listRecursos.size() > 0){
             for(Processo processo : listProcessos){
                 processo.start();
             }
           new Log(areaTextoLog,listProcessos,listRecursos).start();
-          int tempoSO = Integer.parseInt(deltaTSO.getText().toString());
-          new SO(this,tempoSO).start();
-       }else
+         
+          new SO(this,tempoSO,this.areaDeadLock,this.listProcessos,this.listRecursos).start();
+       }else if(tempoSO <= 0){
+          JOptionPane.showMessageDialog(null, "Digite o tempo do SO!");
+
+       }       
+       else
            JOptionPane.showMessageDialog(null, "Não existem processos e recursos disponíveis para iniciar a simulação!");
        
     }//GEN-LAST:event_btnIniciarActionPerformed
@@ -483,6 +509,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
         if(dialogResult == JOptionPane.YES_OPTION){
           listProcessos.get(indice.intValue()).setVivo(false); //Condição para parada de thread
           listProcessos.remove(indice.intValue());
+            DesenharX(listProcessos.get(indice.intValue()));
           JOptionPane.showMessageDialog(null, "Processo excluído!");
           CarregarAreaTextoProcessosRecursos();
 
@@ -500,37 +527,10 @@ public class TelaPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-       /*this.DesenharCirculo(400, 100);
-       this.DesenharCirculo(470, 100);
-       this.DesenharCirculo(540, 100);
-       this.DesenharCirculo(610, 100);
-       this.DesenharCirculo(680, 100);
-       this.DesenharCirculo(750, 100);
-       this.DesenharCirculo(820, 100);
-       this.DesenharCirculo(890, 100);
-       this.DesenharCirculo(960, 100);
-       this.DesenharCirculo(1030, 100); */
        
-       
-       
-    /*  this.DesenharQuadrado(400, 300);
-       this.DesenharQuadrado(470, 300);
-       this.DesenharQuadrado(540, 300);
-       this.DesenharQuadrado(610, 300);
-       this.DesenharQuadrado(680, 300);
-       this.DesenharQuadrado(750, 300);
-       this.DesenharQuadrado(820, 300);
-       this.DesenharQuadrado(890, 300);
-       this.DesenharQuadrado(960, 300);
-       this.DesenharQuadrado(1030, 300);
-       
-       this.DesenharReta(415, 115,415,300);
-       this.DesenharReta(415, 115,485,300);
-       this.DesenharReta(415, 115,1045,300);
-       this.DesenharReta(1045, 115,415,300); */
-    
+    //DesenharQuadrado(400,600,null,"R1");
     for(Processo p : listProcessos){
-        DesenharCirculo(p.getX(), p.getY(), p.getCor());
+        DesenharX(p);
     }
     }//GEN-LAST:event_jButton2ActionPerformed
     public void LimparCampos(){
@@ -556,6 +556,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTextArea areaDeadLock;
     private javax.swing.JTextArea areaTextoLog;
     private javax.swing.JTextArea areaTextoProcessos;
     private javax.swing.JButton btnCriarProcesso;
@@ -586,7 +587,6 @@ public class TelaPrincipal extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JTextArea jTextArea1;
     private javax.swing.JTextField nomeProcesso;
     private javax.swing.JTextField nomeRecurso;
     // End of variables declaration//GEN-END:variables

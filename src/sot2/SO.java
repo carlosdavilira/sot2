@@ -7,7 +7,9 @@ package sot2;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import javax.swing.JTextArea;
 
 /**
  *
@@ -16,17 +18,72 @@ import java.util.Date;
 public class SO extends Thread{
     private TelaPrincipal refTela;
     private int tempo;
+    private JTextArea areaDeadLock;
+    private ArrayList<Processo> listaProcessos;
+    private ArrayList<Recurso> listaRecursos;
+    private ArrayList<Recurso> listaRecursosbloqueados;
     
     
-    public SO (TelaPrincipal refPrincipal, int tempo){
+    
+    
+    public SO (TelaPrincipal refPrincipal, int tempo,JTextArea areaDeadLock,ArrayList<Processo> listaProcessos,ArrayList<Recurso> listaRecursos){
     this.refTela = refPrincipal;
     this.tempo = tempo;
+    this.areaDeadLock = areaDeadLock;
+    this.listaProcessos = listaProcessos;
+    this.listaRecursos = listaRecursos;
+    
     }
    
-    public void DetectarDeadlock(){
+    public String DetectarDeadlock(){
+        for(int i=0; i < listaProcessos.size()-2; i++){
+            for(int j=0; j < listaRecursos.size()-2; j++){
+                if(listaRecursos.get(j).getListaBloqueados().size()-2 > 0){
+                for(int k=0; k < listaRecursos.get(j).getListaBloqueados().size()-2; k++){                
+                    if(listaProcessos.get(i).getIdProcesso() == (listaRecursos.get(j).getListaBloqueados().get(k).getIdProcesso())){
+                    
+                        if(listaRecursos.get(i).getIdProcessoBloqueador()> 0){
+                            for(int l=0; l < listaProcessos.size()-2; l++){
+                                if((listaRecursos.get(i).getIdProcessoBloqueador()) == listaProcessos.get(l).getIdProcesso()){
+                                    if(listaProcessos.get(l).estado.equals("Bloqueado")){
+                                        return "Deadlock entre o processo "+listaProcessos.get(i).getIdProcesso()+" e "+listaRecursos.get(i).getIdProcessoBloqueador();
+                                    }
+                                
+                                }
+                            }
+                            
+                        }
+                        
+                        }
+                    
+                    }
+                    
+                }
+                }
+            }
+        String bloqueados ="";
+        int cont = 0;
+         for(int i = 0; i < listaProcessos.size();i++){
+                if(listaProcessos.get(i).estado == "Bloqueado"){
+                    bloqueados = bloqueados+" "+listaProcessos.get(i).getIdProcesso();
+                    cont++;
+                }
+                if(cont == listaProcessos.size())
+                    return "Deadlock Total";
+            }
+         bloqueados ="";
+         for(int i = 0; i < listaProcessos.size();i++){
+                if(listaProcessos.get(i).estado == "Bloqueado")
+                    bloqueados = bloqueados+" "+listaProcessos.get(i).getIdProcesso();
+            }
+         
+         if(bloqueados.length() > 2){
+            return "Processos bloqueados: "+bloqueados; 
+         }
+        return null;
+        }
    
    
-   }
     
   public boolean ContaTempo(int quantidadeSegundos){
             Date date = new Date();
@@ -66,7 +123,8 @@ public void run(){
         Mudarcor(1);
         this.ContaTempo(tempo);
         Mudarcor(2);
-        DetectarDeadlock();
+        if(DetectarDeadlock() != null)
+            areaDeadLock.setText(areaDeadLock.getText()+"\n"+DetectarDeadlock());
     
     }
 

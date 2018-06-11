@@ -26,7 +26,7 @@ public Log(JTextArea log,ArrayList<Processo> listProcessos,ArrayList<Recurso> li
 public void MostrarLog(){
     this.areaTextoLog.setText(areaTextoLog.getText()+"\n ---------------");
 for(Processo processo : listProcessos){    
-   this.areaTextoLog.setText(areaTextoLog.getText()+"\n Processos: ");
+   
     for(Recurso recurso : processo.getRecursosUsando()){
         this.areaTextoLog.setText(areaTextoLog.getText()+"\n"+"Processo: "+processo.getIdProcesso()+" está solicitando o Recurso: "+recurso.getId());
         this.areaTextoLog.setText(areaTextoLog.getText()+"\n"+"Processo: "+processo.getIdProcesso()+" está:"+processo.estadoLiberado  );   
@@ -34,7 +34,7 @@ for(Processo processo : listProcessos){
         
     }
 }
-this.areaTextoLog.setText(areaTextoLog.getText()+"\n Recursos: ");
+
 for(Recurso recurso : listRecursos){
 
     for(Processo processo : recurso.getListaBloqueados()){

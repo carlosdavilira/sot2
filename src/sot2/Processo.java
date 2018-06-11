@@ -131,6 +131,7 @@ public class Processo extends Thread{ //implements Runnable{
              if(this.getRecursosUsando().contains(r)){}
         else{
          r.getSemaforo().acquire();
+         r.setIdProcessoBloqueador(this.getIdProcesso()); //seta o processo bloqueador
           this.estadoLiberado = "usando o recurso "+r.getNomeRecurso();
         this.recursosUsando.add(r); //adicionando o recurso a lista de recursos que o processo está usando       
         this.getRefTela().DesenharReta(this.getX()+15,this.getY()+30,r.getX()+15,r.getY(),this.getCor());        
@@ -142,6 +143,7 @@ public class Processo extends Thread{ //implements Runnable{
         if(r.getListaBloqueados() == null){}
         else if(r.getListaBloqueados().size() > 0)    
             r.getListaBloqueados().clear(); //apaga a lista de processos bloqueados, pois vai dar um release no semaforo
+        r.setIdProcessoBloqueador(0); //reseta o processo bloqueador
         r.LiberarRecurso(); //da o release no semaforo
         this.estadoLiberado = "liberou o recurso"+r.getNomeRecurso();
         this.recursosUsando.remove(r); //remover recurso da lista de usados do processo
