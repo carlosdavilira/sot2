@@ -24,7 +24,7 @@ public Log(JTextArea log,ArrayList<Processo> listProcessos,ArrayList<Recurso> li
     this.listRecursos = listRecursos;
 } 
 public void MostrarLog(){
-    this.areaTextoLog.setText(areaTextoLog.getText()+"\n ---------------");
+    this.areaTextoLog.setText(areaTextoLog.getText()+"\n ------- ESTADO ATUAL --------");
 for(Processo processo : listProcessos){    
    
     for(Recurso recurso : processo.getRecursosUsando()){

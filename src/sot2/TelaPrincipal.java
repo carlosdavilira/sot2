@@ -480,7 +480,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
             for(Processo processo : listProcessos){
                 processo.start();
             }
-          new Log(areaTextoLog,listProcessos,listRecursos).start();
+         // new Log(areaTextoLog,listProcessos,listRecursos).start();
          
           new SO(this,tempoSO,this.areaDeadLock,this.listProcessos,this.listRecursos).start();
        }else if(tempoSO <= 0){
