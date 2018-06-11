@@ -47,6 +47,7 @@ public Recurso(){
     }
     public void LiberarRecurso(){
         this.semaforo.release();
+        
     }
 
     public Integer getX() {

@@ -60,7 +60,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
      Graphics g = this.getGraphics();
      g.getColor(); 
      if(cor == null)
-        g.setColor(this.getBackground()); // se nao tiver cor pega o do fundo da tela
+        g.setColor(new Color(0,0,0));//this.getBackground()); // se nao tiver cor pega o do fundo da tela
      else
         g.setColor(new Color(cor[0],cor[1],cor[2]));     
      this.getGraphics().drawLine(xInicial, yInicial, xFinal, yFinal);
@@ -102,6 +102,9 @@ public class TelaPrincipal extends javax.swing.JFrame {
         jScrollPane2 = new javax.swing.JScrollPane();
         areaTextoProcessos = new javax.swing.JTextArea();
         jButton2 = new javax.swing.JButton();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        jTextArea1 = new javax.swing.JTextArea();
+        jLabel12 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setPreferredSize(new java.awt.Dimension(1360, 768));
@@ -318,6 +321,13 @@ public class TelaPrincipal extends javax.swing.JFrame {
             }
         });
 
+        jTextArea1.setEditable(false);
+        jTextArea1.setColumns(20);
+        jTextArea1.setRows(5);
+        jScrollPane3.setViewportView(jTextArea1);
+
+        jLabel12.setText("Deadlocks");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -340,19 +350,30 @@ public class TelaPrincipal extends javax.swing.JFrame {
                         .addContainerGap(445, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 240, Short.MAX_VALUE)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 260, Short.MAX_VALUE)
                             .addComponent(jScrollPane2))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton2)
-                        .addGap(474, 474, 474))))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(jButton2)
+                                .addGap(474, 474, 474))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel12)
+                                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addContainerGap())))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel10)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel10)
+                    .addComponent(jLabel12))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 312, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 312, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 193, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel11)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -432,13 +453,16 @@ public class TelaPrincipal extends javax.swing.JFrame {
         // TODO add your handling code here:
         //DesenharQuadrado(100,200);
        // DesenharCirculo(100,200);
-       if(listProcessos.size() > 0 && listRecursos.size() > 0)
+       if(listProcessos.size() > 0 && listRecursos.size() > 0){
             for(Processo processo : listProcessos){
                 processo.start();
             }
-       else
+          new Log(areaTextoLog,listProcessos,listRecursos).start();
+          int tempoSO = Integer.parseInt(deltaTSO.getText().toString());
+          new SO(this,tempoSO).start();
+       }else
            JOptionPane.showMessageDialog(null, "Não existem processos e recursos disponíveis para iniciar a simulação!");
-        
+       
     }//GEN-LAST:event_btnIniciarActionPerformed
     public void CarregarAreaTextoProcessosRecursos(){
         areaTextoProcessos.setText("");
@@ -446,7 +470,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
             areaTextoProcessos.setText(areaTextoProcessos.getText() + "\n" + "Recurso: "+recurso.getNomeRecurso()+" ID:" + recurso.getId());
         }
         for(Processo processo : listProcessos){
-            areaTextoProcessos.setText(areaTextoProcessos.getText() + "\n" + "Processo: "+processo.getIdProcesso()+" - Δtu:"+ processo.getDeltaTu()+" - Δtu:"+processo.getDeltaTs());
+            areaTextoProcessos.setText(areaTextoProcessos.getText() + "\n" + "Processo: "+processo.getIdProcesso()+" - Δtu:"+ processo.getDeltaTu()+" - Δts:"+processo.getDeltaTs());
         }
     }
     private void btnDeletarProcessoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeletarProcessoActionPerformed
@@ -547,6 +571,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -560,6 +585,8 @@ public class TelaPrincipal extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JTextArea jTextArea1;
     private javax.swing.JTextField nomeProcesso;
     private javax.swing.JTextField nomeRecurso;
     // End of variables declaration//GEN-END:variables

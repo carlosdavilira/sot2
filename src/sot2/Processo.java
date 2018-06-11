@@ -5,7 +5,10 @@
  */
 package sot2;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -28,12 +31,15 @@ public class Processo extends Thread{ //implements Runnable{
     private ArrayList<Recurso> refListRecurso;
     private JTextArea areaTextoLog;
     private TelaPrincipal refTela;
+    public String estado = "Rodando";
+    public String estadoLiberado = "Sim";
 
     
     public Processo(ArrayList listRecurso, JTextArea refLog, TelaPrincipal refTela){
         this.refListRecurso = listRecurso;
         this.areaTextoLog = refLog;
         this.refTela = refTela;
+        this.recursosUsando = new ArrayList<>();
     }
     
     
@@ -99,6 +105,10 @@ public class Processo extends Thread{ //implements Runnable{
     public TelaPrincipal getRefTela() {
         return refTela;
     }
+
+    public ArrayList<Recurso> getRecursosUsando() {
+        return recursosUsando;
+    }
     
     
 
@@ -111,43 +121,71 @@ public class Processo extends Thread{ //implements Runnable{
     public void UtilizarRecurso(Recurso r) throws InterruptedException{
         if(r.getSemaforo().availablePermits() == 0){            
             r.getListaBloqueados().add(this); //Adiciona processo a lista de bloqueados do recurso
-            areaTextoLog.setText(areaTextoLog.getText()+"\n"+"Processo: "+this.getIdProcesso()+" está Bloqueado!");
-            for(Processo processo : r.getListaBloqueados()){
-                System.out.println("Processo: "+processo.getIdProcesso()+" está Bloqueado!");
-            }
+            //areaTextoLog.setText(areaTextoLog.getText()+"\n"+"Processo: "+this.getIdProcesso()+" está Bloqueado!");
+            this.estado = "Bloqueado";
+            //for(Processo processo : r.getListaBloqueados()){
+                //System.out.println("Processo: "+processo.getIdProcesso()+" está Bloqueado!");
+           // }
         }
         //r.UsarRecurso();
-        r.getSemaforo().acquire();
-        this.getRefTela().DesenharReta(this.getX()+15,this.getY()+30,r.getX()+15,r.getY(),this.getCor());
-        
-        areaTextoLog.setText(areaTextoLog.getText()+"\n"+"Processo: "+this.getIdProcesso()+" está usando o Recurso: "+r.getId());
-        System.out.println("Processo: "+this.getIdProcesso()+" está usando o Recurso: "+r.getId());
+             if(this.getRecursosUsando().contains(r)){}
+        else{
+         r.getSemaforo().acquire();
+          this.estadoLiberado = "usando o recurso "+r.getNomeRecurso();
+        this.recursosUsando.add(r); //adicionando o recurso a lista de recursos que o processo está usando       
+        this.getRefTela().DesenharReta(this.getX()+15,this.getY()+30,r.getX()+15,r.getY(),this.getCor());        
+        }
+        //areaTextoLog.setText(areaTextoLog.getText()+"\n"+"Processo: "+this.getIdProcesso()+" está usando o Recurso: "+r.getId());
+       // System.out.println("Processo: "+this.getIdProcesso()+" está usando o Recurso: "+r.getId());
     }
     public void LiberarRecurso(Recurso r ){
-        if(r.getListaBloqueados() == null ){}
+        if(r.getListaBloqueados() == null){}
         else if(r.getListaBloqueados().size() > 0)    
-            r.getListaBloqueados().clear();
-        r.LiberarRecurso();
-        areaTextoLog.setText(areaTextoLog.getText()+"\n"+"Processo: "+this.getIdProcesso()+" liberou o Recurso: "+r.getId());
-         System.out.println(this.getIdProcesso()+" liberou o Recurso: "+r.getId());
+            r.getListaBloqueados().clear(); //apaga a lista de processos bloqueados, pois vai dar um release no semaforo
+        r.LiberarRecurso(); //da o release no semaforo
+        this.estadoLiberado = "liberou o recurso"+r.getNomeRecurso();
+        this.recursosUsando.remove(r); //remover recurso da lista de usados do processo
+        if(this.recursosUsando.size() == 0)
+            this.estado = "Rodando";
+        //areaTextoLog.setText(areaTextoLog.getText()+"\n"+"Processo: "+this.getIdProcesso()+" liberou o Recurso: "+r.getId());
+       //  System.out.println(this.getIdProcesso()+" liberou o Recurso: "+r.getId());
         this.getRefTela().DesenharReta(this.getX()+15,this.getY()+30,r.getX()+15,r.getY(),null);
         
     
     }
     
-   public int SortearRecurso(){
-  
-   for(int i = 0; i< this.recursosUsando.size(); i++){
-       Random rand = new Random();
-       int indeceRecursoSorteado = rand.nextInt(this.refListRecurso.size());
-       if(this.refListRecurso.get(indeceRecursoSorteado).equals(this.recursosUsando.get(i))){
+   
+    public int SortearRecurso(){
+    Random rand = new Random();
+    int indeceRecursoSorteado = rand.nextInt(this.refListRecurso.size());
+     if(this.recursosUsando == null)
+            return indeceRecursoSorteado;
+   for(int i = 0; i < this.recursosUsando.size(); i++){
+        if(this.recursosUsando.get(i) == null)
+            return indeceRecursoSorteado;
+        //Para a primeira iteração, considera-se o indice 0 como o primeiro
+        else if(this.refListRecurso.get(indeceRecursoSorteado).equals(this.recursosUsando.get(i))){
            // se for igual o programa ira ignorar, pois o processo ja esta de posse do recurso
+          indeceRecursoSorteado = rand.nextInt(this.refListRecurso.size());
        }else{
            return indeceRecursoSorteado;
        }
    }
    return 0;
    }
+    
+    public boolean ContaTempo(int quantidadeSegundos){
+            Date date = new Date();
+            DateFormat formato = new SimpleDateFormat("ss");
+            String formattedDate = formato.format(date);    
+            Integer tempoFD = (Integer.parseInt(formattedDate));
+            Integer tempoFinal = tempoFD+quantidadeSegundos;
+            while(tempoFD < tempoFinal){
+                formattedDate = formato.format(new Date());
+                tempoFD = (Integer.parseInt(formattedDate));
+            }
+        return true;
+    }
     
     @Override
     public void run() {
@@ -158,11 +196,23 @@ public class Processo extends Thread{ //implements Runnable{
             Recurso recurso =  this.refListRecurso.get(SortearRecurso());
             
             try {
+                //long tempoInicial = (System.currentTimeMillis());
+               // while(System.currentTimeMillis()  > ((this.getDeltaTs()*1000) + tempoInicial)){
+               ContaTempo(this.getDeltaTs());
+               //Threaad.sleep(deltaTs * 1000);
+               if(this.getRecursosUsando().contains(recurso)){
+                    //System.out.println("Processo "+this.getIdProcesso()+" usando o recurso "+recurso.getNomeRecurso());
+                    //ContaTempo(this.getDeltaTu());
+                   // System.out.println("Processo "+this.getIdProcesso()+" parou de usar o recurso "+recurso.getNomeRecurso());
+                    this.LiberarRecurso(recurso);
+               }
+               else if(!this.getRecursosUsando().contains(recurso)){
+                    this.UtilizarRecurso(recurso);  // utiliza recurso 
+                     }                
                 
-                Thread.sleep(deltaTs * 1000);
-                this.UtilizarRecurso(recurso);  // utiliza recurso          
+               // tempoInicial = (int)System.currentTimeMillis();
                 
-                this.LiberarRecurso(recurso);
+               // while(System.currentTimeMillis() > ((this.getDeltaTu()*1000)+tempoInicial)){
             } catch (InterruptedException ex) {
                 Logger.getLogger(Processo.class.getName()).log(Level.SEVERE, null, ex);
             }          
@@ -170,6 +220,8 @@ public class Processo extends Thread{ //implements Runnable{
         }
 
     }
+    
+    
     
     
     
