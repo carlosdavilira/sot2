@@ -20,7 +20,7 @@ private Integer id;
 private Semaphore semaforo;
 private Integer x;
 private Integer y;
-private int cor[] = new int[3]; 
+public int cor[] = new int[3]; 
 private ArrayList<Processo> listaBloqueados = new ArrayList<>();
 private int idProcessoBloqueador;
 public Button botao;

@@ -27,9 +27,9 @@ public class Cores {
  cores.get(1).green = 0;
  cores.get(1).blue = 40;
  
- cores.get(2).red = 0;
- cores.get(2).green = 0;
- cores.get(2).blue = 0;
+ cores.get(2).red = 236;
+ cores.get(2).green = 45;
+ cores.get(2).blue = 96;
  
  cores.get(3).red = 106;
  cores.get(3).green = 182;

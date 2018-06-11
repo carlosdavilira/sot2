@@ -46,8 +46,9 @@ public class TelaPrincipal extends javax.swing.JFrame {
         this.getGraphics().drawRect(x, y, 30, 30);    
     };
     public void DesenharQuadrado(int x, int y, int[] cor){
-        this.getGraphics().setColor(new Color(cor[0], cor[1], cor[2]));
-        this.getGraphics().fillRect(x, y, 30, 30);    
+        Graphics g  = this.getGraphics();
+        g.setColor(new Color(cor[0], cor[1], cor[2]));
+        g.fillRect(x, y, 30, 30);    
     };
      public void DesenharQuadrado(int x, int y, int[] cor,String nomeR, Recurso r){
         Button b  = new Button(nomeR);
@@ -64,7 +65,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
      public void DesenharCirculo(int x, int y, int cor[]){
         Graphics g = this.getGraphics();
         g.getColor();
-        g.setColor(new Color(cor[0],cor[1],cor[2]));        
+        g.setColor(new Color(cor[0],cor[1],cor[2]));      
         
         //g.setColor(Color.yellow); 
         g.fillOval(x, y, 30, 30);    
@@ -76,7 +77,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
         g.setColor(new Color(0,0,0));//this.getBackground()); // se nao tiver cor pega o do fundo da tela
      else
         g.setColor(new Color(cor[0],cor[1],cor[2]));     
-     this.getGraphics().drawLine(xInicial, yInicial, xFinal, yFinal);
+     g.drawLine(xInicial, yInicial, xFinal, yFinal);
     }
     public void DesenharX(Processo p){
         this.getGraphics().drawLine(p.getX()-10, p.getY()-5, p.getX()+30, p.getY()+30);
@@ -532,6 +533,8 @@ public class TelaPrincipal extends javax.swing.JFrame {
     for(Processo p : listProcessos){
         DesenharX(p);
     }
+    int testeCor[] = {255,255,255};
+    this.DesenharReta(this.getX()+15,this.getY()+30,listRecursos.get(0).getX()+15,listRecursos.get(0).getY(),testeCor);
     }//GEN-LAST:event_jButton2ActionPerformed
     public void LimparCampos(){
         //Recursos

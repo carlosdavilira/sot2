@@ -5,6 +5,7 @@
  */
 package sot2;
 
+import java.awt.Graphics;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -123,6 +124,10 @@ public class Processo extends Thread{ //implements Runnable{
             r.getListaBloqueados().add(this); //Adiciona processo a lista de bloqueados do recurso
             //areaTextoLog.setText(areaTextoLog.getText()+"\n"+"Processo: "+this.getIdProcesso()+" está Bloqueado!");
             this.estado = "Bloqueado";
+            int cor[] = {0,0,0};
+            refTela.DesenharCirculo(this.getX(), this.getY(), cor);
+                  
+            
             //for(Processo processo : r.getListaBloqueados()){
                 //System.out.println("Processo: "+processo.getIdProcesso()+" está Bloqueado!");
            // }
@@ -144,14 +149,19 @@ public class Processo extends Thread{ //implements Runnable{
         else if(r.getListaBloqueados().size() > 0)    
             r.getListaBloqueados().clear(); //apaga a lista de processos bloqueados, pois vai dar um release no semaforo
         r.setIdProcessoBloqueador(0); //reseta o processo bloqueador
-        r.LiberarRecurso(); //da o release no semaforo
         this.estadoLiberado = "liberou o recurso"+r.getNomeRecurso();
+        r.LiberarRecurso(); //da o release no semaforo        
         this.recursosUsando.remove(r); //remover recurso da lista de usados do processo
+        int cor[] = {r.cor[0],r.cor[1],r.cor[2]};
+        refTela.DesenharCirculo(this.getX(), this.getY(), cor);
+        
         if(this.recursosUsando.size() == 0)
             this.estado = "Rodando";
+        
         //areaTextoLog.setText(areaTextoLog.getText()+"\n"+"Processo: "+this.getIdProcesso()+" liberou o Recurso: "+r.getId());
        //  System.out.println(this.getIdProcesso()+" liberou o Recurso: "+r.getId());
-        this.getRefTela().DesenharReta(this.getX()+15,this.getY()+30,r.getX()+15,r.getY(),null);
+       int corL[] = {240,240,240};
+        this.getRefTela().DesenharReta(this.getX()+15,this.getY()+30,r.getX()+15,r.getY(),corL);
         
     
     }
