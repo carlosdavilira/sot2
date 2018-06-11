@@ -37,6 +37,7 @@ public class Processo extends Thread{ //implements Runnable{
     public String estado = "Rodando";
     public String estadoLiberado = "Sim";
     public Semaphore mutex = new Semaphore(1);
+    public Semaphore mutexDesenho = new Semaphore(1);
     
     public Processo(ArrayList listRecurso, JTextArea refLog, TelaPrincipal refTela){
         this.refListRecurso = listRecurso;
@@ -127,9 +128,10 @@ public class Processo extends Thread{ //implements Runnable{
             //areaTextoLog.setText(areaTextoLog.getText()+"\n"+"Processo: "+this.getIdProcesso()+" está Bloqueado!");
             this.estado = "Bloqueado";
             int cor[] = {0,0,0};
+            mutexDesenho.acquire();
             refTela.DesenharReta(this.getX()+15, this.getY()+30, r.getX()+15, r.getY(), cor);
             refTela.DesenharCirculo(this.getX(), this.getY(), cor);
-                  
+            mutexDesenho.release();
             
             //for(Processo processo : r.getListaBloqueados()){
             this.mutex.acquire();
@@ -140,7 +142,7 @@ public class Processo extends Thread{ //implements Runnable{
             areaTextoLog.setText(areaTextoLog.getText()+"\n"+ "Processo: "+this.getIdProcesso()+" está Bloqueado!");
             this.mutex.release();
 // }
-        }
+        }else{
         //r.UsarRecurso();
              //if(this.getRecursosUsando().contains(r)){}
         mutex.acquire();
@@ -156,9 +158,12 @@ public class Processo extends Thread{ //implements Runnable{
             
             r.setIdProcessoBloqueador(this.getIdProcesso()); //seta o processo bloqueador
             this.estadoLiberado = "usando o recurso "+r.getNomeRecurso();
-            this.recursosUsando.add(r); //adicionando o recurso a lista de recursos que o processo está usando
+            this.recursosUsando.add(r); //adicionando o recurso a lista de recursos que o processo está usando           
+           mutexDesenho.acquire();
            getRefTela().DesenharQuadrado(r.getX(), r.getY(), this.getCor());
-           this.getRefTela().DesenharReta(this.getX()+15,this.getY()+30,r.getX()+15,r.getY(),this.getCor());        
+           this.getRefTela().DesenharReta(this.getX()+15,this.getY()+30,r.getX()+15,r.getY(),this.getCor());
+           mutexDesenho.release();
+        }
         }
         
     }
@@ -166,7 +171,9 @@ public class Processo extends Thread{ //implements Runnable{
         if(r.getListaBloqueados() == null){}
         else if(r.getListaBloqueados().size() > 0){
             for(Processo p : r.getListaBloqueados()){
+                mutexDesenho.acquire();
                 refTela.DesenharCirculo(p.getX(), p.getY(), p.getCor());
+                 mutexDesenho.release();
             }
             r.setIdProcessoBloqueador(0);
             r.getListaBloqueados().clear();
@@ -178,23 +185,26 @@ public class Processo extends Thread{ //implements Runnable{
         this.estadoLiberado = "liberou o recurso"+r.getNomeRecurso();
         /* DESMARCAR AQUI SE NECESSARIO*/ 
         
-        r.getSemaforo().release();//da o release no semaforo        
+         r.getSemaforo().release();//da o release no semaforo        
          mutex.acquire();
          areaTextoLog.setText(areaTextoLog.getText()+"\n"+"Processo: "+this.getIdProcesso()+" liberou o Recurso: "+r.getId());
          System.out.println("Processo "+this.getIdProcesso()+" liberou o Recurso: "+r.getId());
          mutex.release();
 // this.recursosUsando.remove(r); //remover recurso da lista de usados do processo
-       int cor[] = {240,240,240};
+        mutexDesenho.acquire();
+        int cor[] = {240,240,240};
         refTela.DesenharQuadrado(r.getX(), r.getY(), cor);
+        mutexDesenho.release();
         //int cor[] = {240,240,240};
        // refTela.DesenharQuadrado(r.getX(), r.getY(), cor);
         
         if(this.recursosUsando.size() == 0)
             this.estado = "Rodando";
          
-         
+         mutexDesenho.acquire();
          int corL[] = {240,240,240};
         this.getRefTela().DesenharReta(this.getX()+15,this.getY()+30,r.getX()+15,r.getY(),corL);
+        mutexDesenho.release();
     }
     
    
@@ -247,7 +257,7 @@ public class Processo extends Thread{ //implements Runnable{
                ContaTempo(this.getDeltaTs());
                //Threaad.sleep(deltaTs * 1000);
                //if(this.getRecursosUsando().contains(recurso)){
-               if(BuscaRecurso(this.getRecursosUsando(),recurso)){
+               if((this.getRecursosUsando().contains(recurso))){
                    //mutex.acquire();
                    //System.out.println("Processo "+this.getIdProcesso()+" usando o recurso "+recurso.getNomeRecurso());
                    //mutex.release();
