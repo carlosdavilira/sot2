@@ -8,6 +8,7 @@ import java.awt.Graphics;
 import java.awt.List;
 import java.awt.Toolkit;
 import java.util.ArrayList;
+import java.util.concurrent.Semaphore;
 import javax.swing.JOptionPane;
 
 
@@ -26,6 +27,8 @@ public class TelaPrincipal extends javax.swing.JFrame {
     private int[] cores =  {224,7,46}; //RED GREEN BLUE
     private final  ArrayList<Cores> listaCores = new Cores().getPalletacores();
     private int indiceCor = 0;
+     public Semaphore mutex = new Semaphore(1);
+    public Semaphore mutexDesenho = new Semaphore(1);
     
     
     public TelaPrincipal() {
@@ -125,7 +128,6 @@ public class TelaPrincipal extends javax.swing.JFrame {
         jLabel12 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setPreferredSize(new java.awt.Dimension(1360, 768));
         setResizable(false);
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowActivated(java.awt.event.WindowEvent evt) {
@@ -355,6 +357,8 @@ public class TelaPrincipal extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel10)
+                            .addComponent(jLabel11)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
@@ -362,24 +366,19 @@ public class TelaPrincipal extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(35, 35, 35)
-                                .addComponent(btnIniciar, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jLabel10)
-                            .addComponent(jLabel11))
-                        .addContainerGap(445, Short.MAX_VALUE))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jButton2)
+                                    .addComponent(btnIniciar, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 260, Short.MAX_VALUE)
                             .addComponent(jScrollPane2))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 887, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel12)
-                                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addContainerGap())
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(jButton2)
-                                .addGap(474, 474, 474))))))
+                            .addComponent(jLabel12)
+                            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -396,7 +395,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
                 .addComponent(jLabel11)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 280, Short.MAX_VALUE)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 213, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(jButton2)))
@@ -425,7 +424,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
            JOptionPane.showMessageDialog(null, "O ID do processo precisa ser MAIOR que zero");
 
        else{           
-         Processo novo = new Processo(this.listRecursos,areaTextoLog,this);
+         Processo novo = new Processo(this.listRecursos,areaTextoLog,this,this.mutex,this.mutexDesenho);
             novo.setIdProcesso(Integer.parseInt(nomeProcesso.getText()));
             novo.setDeltaTs(Integer.parseInt(deltaTS.getText()));
             novo.setDeltaTu(Integer.parseInt(deltaTu.getText()));
@@ -482,7 +481,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
             }
          // new Log(areaTextoLog,listProcessos,listRecursos).start();
          
-          new SO(this,tempoSO,this.areaDeadLock,this.listProcessos,this.listRecursos).start();
+          //new SO(this,tempoSO,this.areaDeadLock,this.listProcessos,this.listRecursos).start();
        }else if(tempoSO <= 0){
           JOptionPane.showMessageDialog(null, "Digite o tempo do SO!");
 
