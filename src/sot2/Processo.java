@@ -195,6 +195,7 @@ public class Processo extends Thread{ //implements Runnable{
         this.mutex.acquire();
            // this.estado = "Bloqueado";
             this.recursosUsando.add(r);
+            r.idBloqueados.add(this.getIdProcesso());
             r.setIdProcessoBloqueador(this.getIdProcesso());
             areaTextoLog.setText(areaTextoLog.getText()+"\n Processo "+this.getIdProcesso()+" tentando usar o recurso "+r.getNomeRecurso());
             areaTextoLog.setText(areaTextoLog.getText()+"\n Processo "+this.getIdProcesso()+" utilizando o recurso "+r.getNomeRecurso());

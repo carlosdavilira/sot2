@@ -24,6 +24,7 @@ public int cor[] = new int[3];
 private ArrayList<Processo> listaBloqueados = new ArrayList<>();
 private int idProcessoBloqueador;
 public Button botao;
+public ArrayList<Integer> idBloqueados = new ArrayList<>();
 
 public Recurso(){
     semaforo = new Semaphore(1);

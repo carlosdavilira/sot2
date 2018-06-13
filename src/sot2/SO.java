@@ -115,7 +115,25 @@ public void Mudarcor(int codCor){
     
     }
 }  
-    
+
+public void DeadLock(ArrayList<Recurso> listaRecursos){
+for(int i = 0; i < listaRecursos.size(); i++){
+   if(VerificarDeakLock(i,listaRecursos.get(i)))
+       System.out.println("Deadklock encontrado!");
+}
+}
+private boolean VerificarDeakLock(int i,Recurso recurso) {
+   int chave = recurso.getIdProcessoBloqueador();
+  /*  for(int j = 0; listaRecursos.size(); j++){
+        if(j == i){}
+        else
+        {
+            if(chave < listaRecursos.get(j).getListaBloqueados().contains(j))
+        }
+    }*/
+    return false;
+    } 
+ 
   @Override
 public void run(){
 
@@ -129,4 +147,6 @@ public void run(){
     }
 
 }  
+
+    
 }
