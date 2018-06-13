@@ -129,33 +129,39 @@ public class Processo extends Thread{ //implements Runnable{
        if(this.recursosUsando.contains(r) == false){
         if(r.getSemaforo().availablePermits() <= 0){
             int[] corBloqueado = {0,0,0};
+            
             this.mutex.acquire();
-             areaTextoLog.setText(areaTextoLog.getText()+"\n Processo "+this.getIdProcesso()+" tentando usar o recurso "+r.getNomeRecurso());
-             this.estado = "Bloqueado";
-             areaTextoLog.setText(areaTextoLog.getText()+"\n Processo "+this.getIdProcesso()+" "+this.estado+" pelo recurso "+r.getNomeRecurso());
-             
-                this.mutexDesenho.acquire();
+                areaTextoLog.setText(areaTextoLog.getText()+"\n Processo "+this.getIdProcesso()+" tentando usar o recurso "+r.getNomeRecurso());
+                this.estado = "Bloqueado";
+                areaTextoLog.setText(areaTextoLog.getText()+"\n Processo "+this.getIdProcesso()+" "+this.estado+" pelo recurso "+r.getNomeRecurso());
+            this.mutex.release();
+            
+            this.mutexDesenho.acquire();
                     refTela.DesenharReta(this.getX()+15, this.getY()+30, r.getX()+15, r.getY(), corBloqueado);
                     getRefTela().DesenharCirculo(this.getX(), this.getY(), corBloqueado);           
                     r.getListaBloqueados().add(this); //adiciona processo bloqueado a lista de bloqueados do recurso
-                this.mutexDesenho.release();                 
-             this.mutex.release();
+            this.mutexDesenho.release();
+             
              r.getSemaforo().acquire();           
+            
             this.mutex.acquire();
-            areaTextoLog.setText(areaTextoLog.getText()+"\n Processo "+this.getIdProcesso()+" desbloqueado");
+                areaTextoLog.setText(areaTextoLog.getText()+"\n Processo "+this.getIdProcesso()+" desbloqueado");
             this.mutex.release();
             r.getSemaforo().release();
         }
-        else{    
+        else{ 
+            
         r.getSemaforo().acquire();
-        this.mutexDesenho.acquire();
-                refTela.DesenharReta(this.getX()+15, this.getY()+30, r.getX()+15, r.getY(), this.cor);
-                getRefTela().DesenharCirculo(r.getX(), r.getY(), this.getCor());
-                this.estado = "Rodando";
-                this.mutex.acquire();
+       
+        this.mutex.acquire();
                 areaTextoLog.setText(areaTextoLog.getText()+"\n Processo "+this.getIdProcesso()+" "+this.estado);
-                this.mutex.release();
-        this.mutexDesenho.release();
+        this.mutex.release();
+        
+      // this.mutexDesenho.acquire();
+               // refTela.DesenharReta(this.getX()+15, this.getY()+30, r.getX()+15, r.getY(), this.cor);
+                //getRefTela().DesenharCirculo(r.getX(), r.getY(), this.getCor());
+               // this.estado = "Rodando";
+       // this.mutexDesenho.release();
         
         this.mutex.acquire();
            // this.estado = "Bloqueado";
@@ -172,51 +178,7 @@ public class Processo extends Thread{ //implements Runnable{
         }
         
        }
-     /* 
-        if(r.getSemaforo().availablePermits() == 0){            
-            r.getListaBloqueados().add(this); //Adiciona processo a lista de bloqueados do recurso
-            //areaTextoLog.setText(areaTextoLog.getText()+"\n"+"Processo: "+this.getIdProcesso()+" está Bloqueado!");
-            this.estado = "Bloqueado";
-            int cor[] = {0,0,0};
-            mutexDesenho.acquire();
-                refTela.DesenharReta(this.getX()+15, this.getY()+30, r.getX()+15, r.getY(), cor);
-                refTela.DesenharCirculo(this.getX(), this.getY(), cor);
-            mutexDesenho.release();
-            
-            //for(Processo processo : r.getListaBloqueados()){
-            this.mutex.acquire();
-            //System.out.println("Processo: "+processo.getIdProcesso()+" está Bloqueado!");
-                System.out.println("Processo: "+this.getIdProcesso()+" está tentando usar o recurso "+r.getId());
-                areaTextoLog.setText(areaTextoLog.getText()+"\n"+ "Processo: está tentando usar o recurso "+r.getId());
-                System.out.println("Processo: "+this.getIdProcesso()+" está Bloqueado!");
-                areaTextoLog.setText(areaTextoLog.getText()+"\n"+ "Processo: "+this.getIdProcesso()+" está Bloqueado!");
-            this.mutex.release();
-// }
-        }else{
-        //r.UsarRecurso();
-             //if(this.getRecursosUsando().contains(r)){}
-        mutex.acquire();
-            areaTextoLog.setText(areaTextoLog.getText()+"\n"+"Processo: "+this.getIdProcesso()+" está tentando usar o Recurso: "+r.getId());
-            System.out.println("Processo: "+this.getIdProcesso()+" está tentando usar o Recurso: "+r.getId());     
-        mutex.release();
-        if(BuscaRecurso(this.getRecursosUsando(), r) == false){       
-           r.getSemaforo().acquire();
-            
-            mutex.acquire();
-                areaTextoLog.setText(areaTextoLog.getText()+"\n"+"Processo: "+this.getIdProcesso()+" está usando o Recurso: "+r.getId());
-                System.out.println("Processo: "+this.getIdProcesso()+" está usando o Recurso: "+r.getId());
-            mutex.release();
-            
-            r.setIdProcessoBloqueador(this.getIdProcesso()); //seta o processo bloqueador
-            this.estadoLiberado = "usando o recurso "+r.getNomeRecurso();
-            this.recursosUsando.add(r); //adicionando o recurso a lista de recursos que o processo está usando           
-           mutexDesenho.acquire();
-                getRefTela().DesenharQuadrado(r.getX(), r.getY(), this.getCor());
-                this.getRefTela().DesenharReta(this.getX()+15,this.getY()+30,r.getX()+15,r.getY(),this.getCor());
-           mutexDesenho.release();
-        }
-        }
-        */
+     
     }
     public void LiberarRecurso(Recurso r ) throws InterruptedException{
       
@@ -227,12 +189,14 @@ public class Processo extends Thread{ //implements Runnable{
                 this.getRefTela().DesenharReta(this.getX()+15,this.getY()+30,r.getX()+15,r.getY(),cor);
            mutexDesenho.release();
            
-           this.recursosUsando.remove(r);
-           r.setIdProcessoBloqueador(0);
+           
+           r.getSemaforo().release();
            this.mutex.acquire();
+                this.recursosUsando.remove(r);
+                r.setIdProcessoBloqueador(0);
                 areaTextoLog.setText(areaTextoLog.getText()+"\n O processo "+this.getIdProcesso()+" liberou o recurso "+r.getNomeRecurso());
            this.mutex.release();
-           r.getSemaforo().release();
+           
            for(Processo p : r.getListaBloqueados()){
                mutexDesenho.acquire();                
                 refTela.DesenharCirculo(p.getX(), p.getY(), p.getCor());
