@@ -65,6 +65,18 @@ public class TelaPrincipal extends javax.swing.JFrame {
         this.getContentPane().add(nomeR, b);
         
     }; 
+     public void DesenharQuadrado(int x, int y, int[] cor,String nomeR, Processo p){
+        Button b  = new Button(nomeR);
+        b.setSize(30, 30);
+        b.setMaximumSize(new Dimension(30, 30));
+        b.setLocation(x, y);
+        if(cor != null){
+        b.setBackground(new Color(cor[0], cor[1], cor[2]));
+        } 
+         p.botao = b;
+        this.getContentPane().add(nomeR, b);
+        
+    };
      public void DesenharCirculo(int x, int y, int cor[]){
         Graphics g = this.getGraphics();
         g.getColor();
@@ -445,6 +457,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
             indiceCor = indiceCor+1;
             //Desenhar            
             DesenharCirculo(novo.getX(), novo.getY(),novo.getCor());
+            //DesenharQuadrado(novo.getX(),novo.getY(), novo.getCor(), novo.getIdProcesso().toString(), novo);
             LimparCampos();
     }//GEN-LAST:event_btnCriarProcessoActionPerformed
     }
@@ -462,7 +475,8 @@ public class TelaPrincipal extends javax.swing.JFrame {
             CarregarAreaTextoProcessosRecursos();
             //Desenhar
             DesenharQuadrado(novo.getX(), novo.getY());
-           // DesenharQuadrado(novo.getX(), novo.getY(),null,novo.getId().toString(),novo);
+           // DesenharQuadrado(novo.getX(), novo.getY(), novo.getCor(), novo.getId().toString(), novo);
+            //DesenharQuadrado(novo.getX(), novo.getY(),null,novo.getId().toString(),novo);
             LimparCampos();
 
         }
@@ -529,7 +543,10 @@ public class TelaPrincipal extends javax.swing.JFrame {
        
     //DesenharQuadrado(400,600,null,"R1");
     for(Processo p : listProcessos){
-        DesenharX(p);
+        DesenharQuadrado(p.getX(), p.getY(), p.getCor(), Integer.toString(p.getIdProcesso()), p);
+    }
+    for(Recurso r : listRecursos){
+        DesenharQuadrado(r.getX(), r.getY(), r.getCor(), r.getNomeRecurso(), r);
     }
     int testeCor[] = {255,255,255};
     this.DesenharReta(this.getX()+15,this.getY()+30,listRecursos.get(0).getX()+15,listRecursos.get(0).getY(),testeCor);
