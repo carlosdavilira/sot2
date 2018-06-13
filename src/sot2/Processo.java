@@ -130,30 +130,7 @@ public class Processo extends Thread{ //implements Runnable{
     public void UtilizarRecurso(Recurso r) throws InterruptedException{
        if(this.recursosUsando.contains(r) == false){
            
-        
-     /*   if(r.getSemaforo().availablePermits() <= 0){
-            int[] corBloqueado = {0,0,0};
-            
-            this.mutex.acquire();
-                areaTextoLog.setText(areaTextoLog.getText()+"\n Processo "+this.getIdProcesso()+" tentando usar o recurso "+r.getNomeRecurso());
-                this.estado = "Bloqueado";
-                areaTextoLog.setText(areaTextoLog.getText()+"\n Processo "+this.getIdProcesso()+" "+this.estado+" pelo recurso "+r.getNomeRecurso());
-            this.mutex.release();
-            
-            this.mutexDesenho.acquire();
-                    refTela.DesenharReta(this.getX()+15, this.getY()+30, r.getX()+15, r.getY(), corBloqueado);
-                    getRefTela().DesenharCirculo(this.getX(), this.getY(), corBloqueado);           
-                    r.getListaBloqueados().add(this); //adiciona processo bloqueado a lista de bloqueados do recurso
-            this.mutexDesenho.release();
-             
-             r.getSemaforo().acquire();           
-            
-            this.mutex.acquire();
-                areaTextoLog.setText(areaTextoLog.getText()+"\n Processo "+this.getIdProcesso()+" desbloqueado");
-            this.mutex.release();
-           // r.getSemaforo().release();
-        } */
-       // else{  COMEÇO DO ELSE
+     
         int[] corBloqueado = {0,0,0};
         this.mutexDesenho.acquire();
                     refTela.DesenharReta(this.getX()+15, this.getY()+30, r.getX()+15, r.getY(), corBloqueado);
@@ -186,11 +163,7 @@ public class Processo extends Thread{ //implements Runnable{
                 areaTextoLog.setText(areaTextoLog.getText()+"\n Processo "+this.getIdProcesso()+" "+this.estado);
         this.mutex.release();
         
-      // this.mutexDesenho.acquire();
-               // refTela.DesenharReta(this.getX()+15, this.getY()+30, r.getX()+15, r.getY(), this.cor);
-                //getRefTela().DesenharCirculo(r.getX(), r.getY(), this.getCor());
-               // this.estado = "Rodando";
-       // this.mutexDesenho.release();
+      
         
         this.mutex.acquire();
            // this.estado = "Bloqueado";
@@ -312,38 +285,7 @@ public class Processo extends Thread{ //implements Runnable{
                } catch (InterruptedException ex) {
                 Logger.getLogger(Processo.class.getName()).log(Level.SEVERE, null, ex);
             }
-               
-                //long tempoInicial = (System.currentTimeMillis());
-               // while(System.currentTimeMillis()  > ((this.getDeltaTs()*1000) + tempoInicial)){
-              // ContaTempo(this.getDeltaTs());
-               
-               //Threaad.sleep(deltaTs * 1000);
-               //if(this.getRecursosUsando().contains(recurso)){
-               
-   /*            if((this.getRecursosUsando().contains(recurso))){
-                   System.out.println("Processo "+this.getIdProcesso()+" vai entrar no LiberarRecurso");
-                   //mutex.acquire();
-                   //System.out.println("Processo "+this.getIdProcesso()+" usando o recurso "+recurso.getNomeRecurso());
-                   //mutex.release();
-                   //ContaTempo(this.getDeltaTu());
-                   //mutex.acquire();
-                   //System.out.println("Processo "+this.getIdProcesso()+" parou de usar o recurso "+recurso.getNomeRecurso());
-                    this.LiberarRecurso(recurso);
-               }
-               //else if(!this.getRecursosUsando().contains(recurso)){
-               else if(this.getRecursosUsando().contains(recurso) == false){
-                    this.UtilizarRecurso(recurso);  // utiliza recurso 
-                    System.out.println("Processo "+this.getIdProcesso()+" vai entrar no UtilizarRecurso");
-                     }                
-                
-               // tempoInicial = (int)System.currentTimeMillis();
-                
-               // while(System.currentTimeMillis() > ((this.getDeltaTu()*1000)+tempoInicial)){
-            } catch (InterruptedException ex) {
-                Logger.getLogger(Processo.class.getName()).log(Level.SEVERE, null, ex);
-            }          
-        */
-        }
+      }
 System.out.println("Processo "+this.getIdProcesso()+ " saiu do Loop");
     }
     
