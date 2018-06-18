@@ -21,17 +21,18 @@ public class QuestaoH2O2 {
   
    
    public static void main(String args[]){
-       new QuestaoH2O2().IniciarSimulacao();
+       new QuestaoH2O2().IniciarSimulacao(2);
        
    
    }
    
-   public void IniciarSimulacao(){
-       for(int i = 0; i < 2; i++){
+   public void IniciarSimulacao(int quantidadeIteracoes){
+       for(int i = 0; i < quantidadeIteracoes; i++){
+           Hidrogenio hidro = new Hidrogenio(this);
+            hidro.start();
             Oxigenio oxi = new Oxigenio(this);
             oxi.start();
-            Hidrogenio hidro = new Hidrogenio(this);
-            hidro.start();
+            
        }
    
    }

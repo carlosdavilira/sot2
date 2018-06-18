@@ -24,7 +24,7 @@ public class Hidrogenio extends Thread{
     }
     
     public void FormaMolecula(){
-        H2O2 h2o2 = new H2O2();
+        H2O2 h2o2 = new H2O2("Hidrogenio threadId "+this.getId());
         
     }
     
@@ -38,13 +38,16 @@ public class Hidrogenio extends Thread{
                 q.oxigenio = q.oxigenio-2;
                 q.mutex.release();
                 q.OXI.release();
-                q.OXI.release();             
+                q.OXI.release();
+                q.HID.release();
+                q.HID.release(); 
              }
              else
              {
                 q.mutex.release();             
              }
           q.HID.acquire();
+          FormaMolecula();
           
              
              

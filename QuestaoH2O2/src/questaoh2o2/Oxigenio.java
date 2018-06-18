@@ -22,7 +22,7 @@ public class Oxigenio extends Thread{
         q = questaoH2O2;
     }
     public void FormaMolecula(){
-        H2O2 h2o2 = new H2O2();        
+        H2O2 h2o2 = new H2O2("Oxigenio  ThreadId"+this.getId());        
     }
     
     @Override
@@ -36,7 +36,9 @@ public class Oxigenio extends Thread{
                 q.oxigenio = q.oxigenio-2;
                 q.mutex.release();
                 q.HID.release();
-                q.HID.release();                      
+                q.HID.release();
+                q.OXI.release();
+                q.OXI.release(); 
             }
             else
             {

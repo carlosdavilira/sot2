@@ -11,8 +11,8 @@ package questaoh2o2;
  */
 public class H2O2 extends Thread{
     
-    public H2O2(){
-           System.out.println("H2O2 gerado: id da Thread"+this.getId());
+    public H2O2(String texto){
+           System.out.println(texto+" gerou H2O2: id da Thread gerada"+this.getId());
     }
     
 }
