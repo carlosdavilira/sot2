@@ -36,6 +36,7 @@ public class Hidrogenio extends Thread{
              if(q.hidrogenio >= 2 && q.oxigenio >= 2){
                 q.hidrogenio = q.hidrogenio-2;
                 q.oxigenio = q.oxigenio-2;
+                FormaMolecula();
                 q.mutex.release();
                 q.OXI.release();
                 q.OXI.release();
@@ -47,7 +48,7 @@ public class Hidrogenio extends Thread{
                 q.mutex.release();             
              }
           q.HID.acquire();
-          FormaMolecula();
+          //FormaMolecula();
           
              
              

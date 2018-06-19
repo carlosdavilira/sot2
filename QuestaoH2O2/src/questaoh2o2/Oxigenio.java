@@ -34,6 +34,7 @@ public class Oxigenio extends Thread{
             {
                 q.hidrogenio = q.hidrogenio-2;
                 q.oxigenio = q.oxigenio-2;
+                FormaMolecula();
                 q.mutex.release();
                 q.HID.release();
                 q.HID.release();
@@ -45,7 +46,7 @@ public class Oxigenio extends Thread{
                 q.mutex.release();                        
             }
             q.OXI.acquire();
-            FormaMolecula();
+           // FormaMolecula();
             
             
             
